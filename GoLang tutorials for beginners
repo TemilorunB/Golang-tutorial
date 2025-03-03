@@ -1,0 +1,70 @@
+package main
+
+import "fmt"
+
+func main() {
+	var conferenceName string = "Go conference"
+	// conferenceName := "Go conference". is the same as the one above, but doesnt work for constant. just variables
+	const conferenceTicket int = 70
+	var remainingTicket uint = 70
+	var booking [70]string
+
+	// string means characters, int means integer, theyre types of int too
+	// such as uit, float (decimal numbers often used in statistical data) etc, with time I'll familiarize myself with them
+
+	fmt.Printf("conferenceTickets is %T, remainingTickets is %T, conferenceName is %T\n", conferenceTicket, remainingTicket, conferenceName)
+
+	fmt.Println("Hello world")
+	// printin means prnt then next line
+	//printf means print variable
+	fmt.Println("Welcome to our first class on", conferenceName, "how to use Go")
+	fmt.Println("We have a total of", conferenceTicket, "tickets and", remainingTicket, "are stil available")
+	fmt.Println("So help me God")
+	fmt.Printf("This is about the use of v and printf or the basic foundation of Go\n")
+	fmt.Printf("Welcome to %v booking application\n", conferenceName)
+	fmt.Printf("We have a total of %v tickets and %v are stil available.\n", conferenceTicket, remainingTicket)
+
+	// time to learn array and size
+
+	var firstName string
+	var lastName string
+	var email string
+	var userTickets uint
+	// to use for comments, doesnt affects the codes
+	// ask for their username
+
+	// now we want to get the users data
+	fmt.Println("Enter your first name:")
+	fmt.Scan(&firstName)
+	// the code initially doesnt reach here until i input a name on the terminal then proceeds to continue
+	fmt.Println("Enter your Last name:")
+	fmt.Scan(&lastName)
+
+	fmt.Println("Enter your Email:")
+	fmt.Scan(&email)
+
+	fmt.Println("Enter number of tickets:")
+	fmt.Scan(&userTickets)
+
+	remainingTicket = remainingTicket - userTickets
+
+	booking[0] = firstName + "" + lastName
+
+	fmt.Printf("The whole array: %v\n", booking)
+	fmt.Printf("the first value: %v\n", booking[0])
+	fmt.Printf("Array type: %T\n", booking)
+	fmt.Printf("Array length: %v\n", len(booking))
+
+	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
+
+	fmt.Printf("%v tickets remaing for %v", remainingTicket, conferenceName)
+	//fmt.Println(remainingTicket)
+	//fmt.Println(&remainingTicket)
+	// pointers: the use of & is to find the location of the stored variable in this case its remaining ticket
+
+	//userName = "Tom"
+	// tom was an example we generated ourself, now we need the consumer to put in their details
+	//userTickets = 5
+	//fmt.Printf("User %v booked %v tickets for the show. \n", firstName, userTickets)
+
+}
