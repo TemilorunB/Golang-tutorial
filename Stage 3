@@ -1,0 +1,189 @@
+package main
+
+import (
+	"booking/support"
+	"fmt"
+	"time"
+)
+
+var conferenceName string = "Go conference"
+
+// conferenceName := "Go conference". is the same as the one above, but doesnt work for constant. just variables
+const conferenceTicket int = 70
+
+var remainingTicket uint = 70
+
+// var booking [70]string
+// the one above is for array, the one below is for slice
+var booking = make([]UserData, 0)
+
+// string means characters, int means integer, theyre types of int too
+// such as uit, float (decimal numbers often used in statistical data) etc, with time I'll familiarize myself with them
+
+type UserData struct {
+	firstName       string
+	lastName        string
+	email           string
+	numberofTickets uint
+}
+
+func main() {
+
+	greetUsers()
+
+	//fmt.Printf("conferenceTickets is %T, remainingTickets is %T, conferenceName is %T\n", conferenceTicket, remainingTicket, conferenceName)
+
+	fmt.Println("Hello world")
+	// printin means prnt then next line
+	//printf means print variable
+	fmt.Println("Welcome to our first class on", conferenceName, "how to use Go")
+	fmt.Println("We have a total of", conferenceTicket, "tickets and", remainingTicket, "are stil available")
+	fmt.Println("So help me God")
+	//fmt.Printf("This is about the use of v and printf or the basic foundation of Go\n")
+
+	// time to learn array and size
+	// time to learn loops
+	for {
+
+		firstName, lastName, email, userTickets := getUserInput()
+
+		isValidName, isValidEmail, isValidTicketNumber := support.ValidateUserinput(firstName, lastName, email, userTickets, remainingTicket)
+		// capitalse it here too
+
+		if isValidName && isValidEmail && isValidTicketNumber {
+
+			bookTicket(userTickets, firstName, lastName, email)
+
+			go sendTicket(userTickets, firstName, lastName, email)
+			// go is used to make the code go concurrent asper t make things run at the am time
+
+			firstName := getfirstNames()
+			fmt.Printf("the first names of the bookings are: %v\n", firstName)
+
+			if remainingTicket == 0 {
+				// end program
+				fmt.Println("Our conference is booked out. Come back next year")
+				break
+			}
+
+			// to the bracket above
+
+		} else {
+			if !isValidName {
+				fmt.Println("First name or Last name you entered is too short")
+			}
+			if !isValidEmail {
+				fmt.Println("email address you entered doesnt't contain @ sign")
+			}
+			if !isValidTicketNumber {
+				fmt.Println("Number of tickets you entered is invalid")
+			}
+		}
+
+	}
+	//if else statement is the best
+
+}
+
+func greetUsers() {
+	fmt.Printf("Welcome to %v booking application \n", conferenceName)
+	fmt.Printf("We have a total of %v tickets and %v are stil available.\n", conferenceTicket, remainingTicket)
+	fmt.Println("Get your tickets here to attend")
+}
+
+func getfirstNames() []string {
+	firstNames := []string{}
+	for _, booking := range booking {
+		// _ known as blank identifier to ignore a variable that you dont want to use
+		//var names = strings.Fields(booking)
+		// strings.fields is using a white space as a seperator
+		firstNames = append(firstNames, booking.firstName)
+	}
+	return firstNames
+
+	// = means assigning values to variable, == for comparing 2 values
+}
+
+func getUserInput() (string, string, string, uint) {
+	// control C to exit the loop from the terminal
+	var firstName string
+	var lastName string
+	var email string
+	var userTickets uint
+	// to use for comments, doesnt affects the codes
+	// ask for their username
+
+	// now we want to get the users data
+	fmt.Println("Enter your first name:")
+	fmt.Scan(&firstName)
+	// the code initially doesnt reach here until i input a name on the terminal then proceeds to continue
+	fmt.Println("Enter your Last name:")
+	fmt.Scan(&lastName)
+
+	fmt.Println("Enter your Email:")
+	fmt.Scan(&email)
+
+	fmt.Println("Enter number of tickets:")
+	fmt.Scan(&userTickets)
+
+	return firstName, lastName, email, userTickets
+}
+
+func bookTicket(userTickets uint, firstName string, lastName string, email string) {
+	remainingTicket = remainingTicket - userTickets
+
+	//creating a map for users
+	var userData = UserData{
+		firstName:       firstName,
+		lastName:        lastName,
+		email:           email,
+		numberofTickets: userTickets,
+	}
+
+	//not needed anymore
+	//userData["firstName"] = firstName
+	//userData["lastName"] = lastName
+	//userData["email"] = email
+	//userData["numberofTickets"] = strconv.FormatUint(uint64(userTickets), 10)
+	// string convert to convert string to and from data types; 10 meaning to base 10 as in whole numbers
+
+	//booking[0] = firstName + " " + lastName
+	booking = append(booking, userData)
+
+	fmt.Printf("List of booking is %v", booking)
+
+	//fmt.Printf("The whole slice: %v\n", booking)
+	//fmt.Printf("the first value: %v\n", booking[0])
+	//fmt.Printf("Slice type: %T\n", booking)
+	//fmt.Printf("Slice length: %v\n", len(booking))
+
+	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
+
+	fmt.Printf("%v tickets remaing for %v\n", remainingTicket, conferenceName)
+}
+
+func sendTicket(userTickets uint, firstName string, lastName string, email string) {
+	time.Sleep(15 * time.Second)
+	// sleep do delay for 10 seconds
+	var ticket = fmt.Sprintf("%v tickets for %v %v", userTickets, firstName, lastName)
+	fmt.Println("##########")
+	fmt.Printf("Sending tickets :\n %v \nto email address %v", ticket, email)
+	fmt.Println("#############")
+}
+
+
+
+package support
+
+import "strings"
+
+func ValidateUserinput(firstName string, lastName string, email string, userTickets uint, remainingTicket uint) (bool, bool, bool) {
+	isValidName := len(firstName) >= 2 && len(lastName) >= 2
+	isValidEmail := strings.Contains(email, "@")
+	isValidTicketNumber := userTickets > 0 && userTickets <= remainingTicket
+	return isValidName, isValidEmail, isValidTicketNumber
+
+}
+
+// capiltalizing the first letter of a function and even variables is done by just capitalizing the first letter
+
